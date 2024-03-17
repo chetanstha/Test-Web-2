@@ -3,7 +3,7 @@ import openai
 # client = OpenAI()
 # import config
 
-# openai.api_key = "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"
+
 # dddd
 
 def chatbot(input):
