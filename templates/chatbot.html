@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gen-AI bot</title>
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='CSS/chat.css')}}"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+
+  <body>
+    <!-- <h1>Hiiii</h1> -->
+    <div class="chatbot_div">
+      <div
+        class="chatbot-message-icon"
+        id="chat-message-icon"
+        onclick="showChatMessage()"
+      >
+        <img src="../static/chatbot-image/icons8-chat-bot-64.png" alt="" />
+      </div>
+      <div class="chat-container chat-hide" id="chat-box">
+        <div class="minimize-maximize">
+          <div class="logo3">
+            <img
+              class="logo1"
+              src="../static/chatbot-image/ChatBot Icon.svg"
+              alt=""
+            />
+          </div>
+          <div class="minimize-maximize-wrapper">
+            <img
+              src="../static/chatbot-image/minimize-svgrepo-com.svg"
+              alt=""
+              class="min"
+              onclick="minChatMessage()"
+            />
+            <img
+              src="../static/chatbot-image/button-close-svgrepo-com.svg"
+              alt=""
+              class="close"
+              onclick="CloseChatMessage()"
+            />
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="chat-box" id="chat-box2"></div>
+          <div class="chatcontainer">
+            <div class="textholder">
+              <input
+                class="input"
+                id="user-input"
+                type="text"
+                placeholder="Type here..."
+                autocomplete="off"
+                autofocus="autofocus"
+              />
+            </div>
+            <div class="send-icon" id="click-icon">
+              <img
+                src="../static/chatbot-image/send-1-svgrepo-com.svg"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const userInput = document.getElementById("user-input");
+      userInput.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+          sendMessages(userInput.value);
+        }
+      });
+      const clickicon = document.getElementById("click-icon");
+      clickicon.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+          sendMessages(userInput.value);
+        }
+      });
+
+      function sendMessages(userInput) {
+        if (!userInput) {
+          return null;
+        }
+        console.log("vvvvvvvvvvvvvvvvvv" + userInput);
+        document.getElementById("user-input").value = "";
+        appendMessage("user", userInput);
+        console.log("uu" + userInput);
+
+        $.ajax({
+          url: "/ask",
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({ userInput: userInput }),
+          success: function (data) {
+            setTimeout(function (data) {
+              const chatMessage = document.createElement("div");
+              appendMessage("bot", data.backendResponse);
+            }, 2000);
+          },
+          error: function (error) {
+            console.error("Error", error);
+          },
+        });
+      }
+
+      function appendMessage(sender, message) {
+        const chatBox = document.getElementById("chat-box2");
+        const messageElement = document.createElement("div");
+        if (sender == "bot") {
+          const loaderElement = document.createElement("div");
+          loaderElement.classList.add("loader");
+          messageElement.classList.add("user-message");
+          messageElement.appendChild(loaderElement);
+          chatBox.appendChild(messageElement);
+        } else {
+          messageElement.classList.add("chat-message");
+          console.log("mmmmmmmmmmmmmm " + message);
+          messageElement.innerText = message;
+          chatBox.appendChild(messageElement);
+        }
+        const chatbox2 = document.getElementById("chat-box2");
+        chatbox2.scrollTo(0, chatbox2.scrollHeight);
+
+        setTimeout(() => {
+          const loaderElement = messageElement.querySelector(".loader");
+          if (loaderElement) {
+            loaderElement.remove();
+            messageElement.innerHTML = message;
+          }
+        }, 2000);
+      }
+      function showChatMessage() {
+        const icon = document.getElementById("chat-message-icon");
+        const chatbox = document.getElementById("chat-box");
+        icon.classList.add("chatbot-message-icon-hide");
+        chatbox.classList.remove("chat-hide");
+      }
+      // showChatMessage();
+      function minChatMessage() {
+        const icon = document.getElementById("chat-message-icon");
+        const chatbox = document.getElementById("chat-box");
+        icon.classList.remove("chatbot-message-icon-hide");
+        chatbox.classList.add("chat-hide");
+      }
+      function CloseChatMessage() {
+        const chatbox = document.getElementById("chat-box");
+        chatbox.style.display = "none";
+        location.reload();
+      }
+    </script>
+  </body>
+</html>
