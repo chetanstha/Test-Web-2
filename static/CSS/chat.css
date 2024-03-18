@@ -53,8 +53,8 @@ html{
     margin: 0px auto;
 }
 .logo1{
-    height: 60px;
-    width: 60px;
+    height: 70px;
+    width: 70px;
 }
 .minimize-maximize .minimize-maximize-wrapper{
     position: absolute;
@@ -191,12 +191,12 @@ html{
     color: white;
 }
 .chat-message{
-    background-color: blue;
+    background-color: rgb(43, 43, 74);
     float: right;
 
 }
 .user-message{
-    background-color: blueviolet;
+    background-color: rgb(37, 69, 79);
     float: left;
 }
 

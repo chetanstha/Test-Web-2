@@ -95,13 +95,14 @@
         console.log("uu" + userInput);
 
         $.ajax({
-          url: "/ask",
+          url: "/process",
           type: "POST",
           contentType: "application/json",
           data: JSON.stringify({ userInput: userInput }),
           success: function (data) {
-            setTimeout(function (data) {
+            setTimeout(function () {
               const chatMessage = document.createElement("div");
+              console.log(data);
               appendMessage("bot", data.backendResponse);
             }, 2000);
           },
@@ -118,6 +119,7 @@
           const loaderElement = document.createElement("div");
           loaderElement.classList.add("loader");
           messageElement.classList.add("user-message");
+          // messageElement.innerHTML = message;
           messageElement.appendChild(loaderElement);
           chatBox.appendChild(messageElement);
         } else {
